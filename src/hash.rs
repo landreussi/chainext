@@ -14,13 +14,8 @@ pub trait Hashable {
 
 /// Contains a 32 bytes hash and provides useful methods.
 // TODO: Make the length of this be generic;
+#[derive(Default)]
 pub struct Hash([u8; 32]);
-
-impl Default for Hash {
-    fn default() -> Self {
-        Self([0; 32])
-    }
-}
 
 impl Hash {
     /// Calculate the difficulty of the hash by fetching the last half of the
@@ -30,9 +25,9 @@ impl Hash {
         const HEXADECIMAL_RANGE: Range<u8> = 0..16;
 
         self.0[16..32]
-            .into_iter()
+            .iter()
             .zip(HEXADECIMAL_RANGE)
-            .map(|(byte, hex)| ((*byte) << hex * 8) as u128)
+            .map(|(byte, hex)| ((*byte) << (hex * 8)) as u128)
             .fold(0, |acc, byte| acc | byte)
     }
 
